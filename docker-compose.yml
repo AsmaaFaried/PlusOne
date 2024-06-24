@@ -1,0 +1,28 @@
+version: '3.10'
+
+services:
+  db:
+    image: mysql:8.0.37
+    environment:
+      MYSQL_DATABASE: 'blog'
+      MYSQL_USER: 'blog'
+      MYSQL_PASSWORD: 'blog'
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/plusonecontainer
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://blog:plog@db/plog
+
+volumes:
+  mysql_data:
